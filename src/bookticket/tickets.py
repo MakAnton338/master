@@ -12,7 +12,6 @@ routes = [
     (10, '2022-11-12', '11:00', 'Kyiv-Zhytomyr', 45),
 ]
 
-
 def main():
 
 
