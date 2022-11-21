@@ -1,3 +1,2 @@
-import tickets
-
-print(tickets.routes)
+a = 1
+if a:
