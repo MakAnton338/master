@@ -1,23 +1,44 @@
+import collections
 import uuid
+import random
+from collections import namedtuple
+from datetime import datetime
 
-Routes = [
-    (0, '2022-11-10', '08:00', 'Kyiv-Odesa', 2),
-    (1, '2022-11-11', '10:00', 'Kyiv-Poltava', 5),
-    (2, '2022-11-12', '12:00', 'Kyiv-Zhytomyr', 3),
-    (3, '2022-11-13', '15:00', 'Kyiv-Lviv', 4),
-    (4, '2022-11-10', '09:00', 'Kyiv-Odesa', 40),
-    (5, '2022-11-11', '11:00', 'Kyiv-Poltava', 38),
-    (6, '2022-11-12', '14:00', 'Kyiv-Zhytomyr', 45),
-    (7, '2022-11-13', '18:00', 'Kyiv-Lviv', 30),
-    (8, '2022-11-10', '07:00', 'Kyiv-Odesa', 40),
-    (9, '2022-11-11', '09:00', 'Kyiv-Poltava', 38),
-    (10, '2022-11-12', '11:00', 'Kyiv-Zhytomyr', 45),
+way = collections.namedtuple('route', ['route_number', 'date', 'time', 'from_', 'to_', 'seats'])
+routes = [
+    way(0, '2022-11-10', '08:00', 'Kyiv', 'Odesa', 45),
+    way(1, '2022-11-11', '10:00', 'Kyiv', 'Poltava', 3),
+    way(2, '2022-11-12', '12:00', 'Kyiv', 'Zhytomyr', 5),
+    way(3, '2022-11-13', '15:00', 'Kyiv', 'Lviv', 23),
+    way(4, '2022-11-10', '09:00', 'Kyiv', 'Dnipro', 43),
+    way(5, '2022-11-11', '11:00', 'Kyiv', 'Nicopol', 14),
+    way(6, '2022-11-12', '14:00', 'Kyiv', 'Kharkiv', 40),
+    way(7, '2022-11-13', '18:00', 'Kyiv', 'Hutir', 12),
+    way(8, '2022-11-10', '07:00', 'Kyiv', 'Zlato', 13),
+    way(9, '2022-11-11', '09:00', 'Kyiv', 'Bucha', 14),
+    way(10, '2022-11-12', '11:00', 'Kyiv', 'Chernigiv', 11),
 ]
-Tickets = []
+
+k_odesa = datetime.fromisoformat('2022-11-10 08:00:00')
+k_poltava = datetime.fromisoformat('2022-11-11 10:00')
+k_zhytomyr = datetime.fromisoformat('2022-11-12 12:00')
+k_lviv = datetime.fromisoformat('2022-11-13 15:00')
+k_dnipro = datetime.fromisoformat('2022-11-10 09:00')
+k_nicopol = datetime.fromisoformat('2022-11-11 11:00')
+k_kharkiv = datetime.fromisoformat('2022-11-12 14:00')
+k_hutir = datetime.fromisoformat('2022-11-13 18:00')
+k_zlato = datetime.fromisoformat('2022-11-10 07:00')
+k_bucha = datetime.fromisoformat('2022-11-11 09:00')
+k_chernigiv = datetime.fromisoformat('2022-11-12 11:00')
+print(type(k_odesa))
+
+
+tickets = []
+
+
 
 
 def main():
-
 
     while True:
         ch = int(input('Введите действие'))
@@ -27,24 +48,34 @@ def main():
             case 1:
                 print('Exit')
             case 2:
-                RouteChoose = int(input("Выберите маршрут:")) #Стандартный инпут для выбора маршрута
-                # print([item for item in Routes if item[0] == RouteChoose])
-                Route = ([item for item in Routes if item[0] == RouteChoose]) #Достаем маршрут из списка.
-                                                                              #Предмет для предмета в Маршрутах если он равен инпуту
-                if not Route: #Если выбор маршрута выходит за рамки item[0] == RouteChoose. Т.е. если запрос маршрута больше, чем их в кортеже
+                route_choose = int(input("Выберите маршрут:"))
+                route = ([item for item in routes if item.route_number == route_choose])
+                if not route:
                     print('Вы выбрали не верный маршурт')
-                RoadTicket = [item for item in Tickets if item[1] == RouteChoose] #Делаем билет. Предмет для предмета в Билетах если
-                NumbSeats = (max(1, len(RoadTicket) if RoadTicket else 0)) + 1 # 1 - ??? +1 потому что отсчёт шел с 0
-                if NumbSeats > Route[0][4]: # число билетов не должно быть больше чем индекс маршрута с индексом кол-ва билетов
+                road_tickets = [item for item in tickets if item[1] == route_choose]
+                numb_seats = (max(1, len(road_tickets) if road_tickets else 0)) + 1
+                if numb_seats > route[0][5]:
                     print('Извините, все билеты проданы')
-                    continue # продолжить
+                    continue
                 else:
-                    Tickets.append((len(Tickets), RouteChoose, NumbSeats, uuid.uuid4())) # добавить в билеты кол-во билетов, выбор маршрута номер места(пока кол-во мест) персональный индекс
-                    print(Tickets[-1])
+                    tickets.append((len(tickets), route_choose, numb_seats, uuid.uuid4()))
+                    print(tickets[-1])
             case 3:
-                print('123')
+                user_choose = int(input("Введите случайную цифру")) # Создал иллюзию закономерности
+                random_ticket= random.choice(routes)
+                print(f' Поздравляю ваш маршрут:', random_ticket)
+                tickets.append((len(tickets), random_ticket, uuid.uuid4()))
             case 4:
                 print('Free ticket')
+            case 5:
+                choose_city = input(str('Введите город в который хотите отправиться'))
+                city = ([item for item in routes if item.to_ == choose_city])
+                if not city:
+                    print('Вы указали не верный город прибытия')
+                    continue
+                else:
+                    print(city)
+
             case _:
                 print('Wrong way')
 
@@ -52,7 +83,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
 
 
