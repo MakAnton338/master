@@ -1,10 +1,9 @@
 import collections
 import uuid
 import random
-from collections import namedtuple
 from datetime import datetime
 
-way = collections.namedtuple('route', ['route_number', 'date', 'time', 'from_', 'to_', 'seats'])
+way = collections.namedtuple('route', ['route_number', 'datetime', 'from_', 'to_', 'seats'])
 routes = [
     way(0, datetime.fromisoformat('2022-11-10 08:00'), 'Kyiv', 'Odesa', 45),
     way(1, datetime.fromisoformat('2022-11-11 10:00'), 'Kyiv', 'Poltava', 3),
@@ -24,6 +23,18 @@ tickets = []
 
 
 
+def buy_tickets(route_choose):
+    route = ([item for item in routes if item.route_number == route_choose])
+    if not route:
+        print('Вы выбрали не верный маршурт')
+    road_tickets = [item for item in tickets if item[1] == route_choose]
+    numb_seats = (max(1, len(road_tickets) if road_tickets else 0)) + 1
+    if numb_seats > route[0][4]:
+        print('Извините, все билеты проданы')
+        return
+    return len(tickets), route_choose, numb_seats, uuid.uuid4()
+
+
 
 def main():
 
@@ -36,17 +47,10 @@ def main():
                 print('Exit')
             case 2:
                 route_choose = int(input("Выберите маршрут:"))
-                route = ([item for item in routes if item.route_number == route_choose])
-                if not route:
-                    print('Вы выбрали не верный маршурт')
-                road_tickets = [item for item in tickets if item[1] == route_choose]
-                numb_seats = (max(1, len(road_tickets) if road_tickets else 0)) + 1
-                if numb_seats > route[0][4]:
-                    print('Извините, все билеты проданы')
-                    continue
-                else:
-                    tickets.append((len(tickets), route_choose, numb_seats, uuid.uuid4()))
-                    print(tickets[-1])
+                ticket = buy_tickets(route_choose)
+                if ticket:
+                    tickets.append(ticket)
+                print(tickets[-1])
             case 3:
                 random_ticket = random.choice(routes)
                 print(f' Поздравляю ваш маршрут:', random_ticket)
@@ -71,5 +75,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-
 
