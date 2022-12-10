@@ -3,19 +3,19 @@ import uuid
 import random
 from datetime import datetime
 
-way = collections.namedtuple('route', ['route_number', 'datetime', 'from_', 'to_', 'seats'])
+way = collections.namedtuple('Route', ['route_number', 'datetime', 'from_', 'to_', 'seats'])
 routes = [
-    way(0, datetime.fromisoformat('2022-11-10 08:00'), 'Kyiv', 'Odesa', 45),
-    way(1, datetime.fromisoformat('2022-11-11 10:00'), 'Kyiv', 'Poltava', 3),
-    way(2, datetime.fromisoformat('2022-11-12 12:00'), 'Kyiv', 'Zhytomyr', 5),
-    way(3, datetime.fromisoformat('2022-11-13 15:00'), 'Kyiv', 'Lviv', 23),
-    way(4, datetime.fromisoformat('2022-11-10 09:00'), 'Kyiv', 'Dnipro', 43),
-    way(5, datetime.fromisoformat('2022-11-11 11:00'), 'Kyiv', 'Nicopol', 14),
-    way(6, datetime.fromisoformat('2022-11-12 14:00'), 'Kyiv', 'Kharkiv', 40),
-    way(7, datetime.fromisoformat('2022-11-13 18:00'), 'Kyiv', 'Hutir', 12),
-    way(8, datetime.fromisoformat('2022-11-10 07:00'), 'Kyiv', 'Chernivsi', 13),
-    way(9, datetime.fromisoformat('2022-11-11 09:00'), 'Kyiv', 'Bucha', 14),
-    way(10, datetime.fromisoformat('2022-11-12 11:00'), 'Kyiv', 'Chernigiv', 11),
+    way(0, datetime.strptime('2022-11-10 08:00', "%Y-%m-%d %H:%M"), 'Kyiv', 'Odesa', 45),
+    way(1, datetime.strptime('2022-11-11 10:00', "%Y-%m-%d %H:%M"), 'Kyiv', 'Poltava', 3),
+    way(2, datetime.strptime('2022-11-12 12:00', "%Y-%m-%d %H:%M"), 'Kyiv', 'Zhytomyr', 5),
+    way(3, datetime.strptime('2022-11-13 15:00', "%Y-%m-%d %H:%M"), 'Kyiv', 'Lviv', 23),
+    way(4, datetime.strptime('2022-11-10 09:00', "%Y-%m-%d %H:%M"), 'Kyiv', 'Dnipro', 43),
+    way(5, datetime.strptime('2022-11-11 11:00', "%Y-%m-%d %H:%M"), 'Kyiv', 'Nicopol', 14),
+    way(6, datetime.strptime('2022-11-12 14:00', "%Y-%m-%d %H:%M"), 'Kyiv', 'Kharkiv', 40),
+    way(7, datetime.strptime('2022-11-13 18:00', "%Y-%m-%d %H:%M"), 'Kyiv', 'Hutir', 12),
+    way(8, datetime.strptime("2023-11-10 07:00", "%Y-%m-%d %H:%M"), 'Kyiv', 'Chernivsi', 13),
+    way(9, datetime.strptime('2022-11-11 09:00', "%Y-%m-%d %H:%M"), 'Kyiv', 'Bucha', 14),
+    way(10, datetime.strptime('2022-11-12 11:00', "%Y-%m-%d %H:%M"), 'Kyiv', 'Chernigiv', 11),
 ]
 
 
@@ -24,7 +24,10 @@ tickets = []
 
 
 def buy_tickets(route_choose):
-    route = ([item for item in routes if item.route_number == route_choose])
+    route = [item for item in routes if item.route_number == route_choose]
+    if route[0][1] <= datetime.today():
+        print('time_check')
+        return
     if not route:
         print('Вы выбрали не верный маршурт')
     road_tickets = [item for item in tickets if item[1] == route_choose]
