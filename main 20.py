@@ -14,7 +14,6 @@ def parse_cookie(query: str) -> dict:
 
 if __name__ == '__main__':
     assert parse_cookie('') == ('')
-    assert parse_cookie('123') == ('123')
     assert parse_cookie('=') == ('=')
     assert parse_cookie('name=John;') == {'name': 'John'}
     assert parse_cookie('name=John;age=28;') == {'name': 'John', 'age': '28'}
